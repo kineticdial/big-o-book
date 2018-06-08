@@ -1,0 +1,203 @@
+* Constant and Linear Time
+
+In this chapter:
+- You'll understand why Big O is useful to programmers
+- Get some basic understanding of *constant time* versus *linear time*
+
+Let me propose a problem to you: Let's say you had the following piece
+of code and your boss wanted to know how fast it was.
+
+#+BEGIN_SRC ruby
+# is_even.rb
+def is_even?(number)
+  number % 2 == 0
+end
+
+puts is_even?(ARGV[0].to_i)
+#+END_SRC
+
+Easy! So you fire up your terminal and run the following.
+
+#+BEGIN_SRC
+$ time ruby is_even.rb 2
+true
+ruby is_even.rb 2 0.06s user 0.01s system 84% cpu 0.084 total
+#+END_SRC
+
+Great! You send your findings to your boss and call it a
+day. Unfortunately, next morning you come into the office to an email.
+
+#+BEGIN_SRC
+to: The Reader <the.reader@megacorp.co>
+from: Big Boss <big.boss@megacorp.co>
+subject: is_even.rb performance
+
+Reader,
+
+You said that is_even.rb takes only 0.084 seconds to run, but I've got
+DevOps telling me we're getting drastically different numbers from our
+live servers. Do you mind telling me what could've gone wrong?
+
+- Big Boss
+#+END_SRC
+
+Damn, Big Boss is right. As a self-taught developer you know
+intuitively that this code will never be extremely slow (it only does
+one thing!), but it's hard to describe exactly what your boss can
+expect without factoring the discrepancy of performance between
+computers.
+
+This is where Big O comes in. *Big O generically describes the time*
+*it takes an algorithm to run, without factoring in individual CPU*
+*speed.* It can also measure space, but we'll get into that later.
+
+The code above is $O(1)$ in Big O notation, which is often referred to
+as *constant time*. This is because the code only does one thing.
+Specifically, it does /the same amount of things no matter the input/.
+In other words, you could say that the number of things it does is
+*constant*.
+
+A mental shortcut for recognizing constant time functions would be the
+absence of any loops or recursion. Even if a function does a couple
+"things," it is still constant time as long as the "couple" doesn't
+grow depending on the input. For example:
+
+#+BEGIN_SRC ruby
+def foo(n)
+  n += 2
+  n / 2
+end
+#+END_SRC
+
+This would still be a constant time function because, no matter the
+input, it will always only do 2 operations.
+
+Alternatively, if your boss had given you this code instead:
+
+#+BEGIN_SRC ruby
+# sum_of_evens.rb
+def sum_of_evens(number)
+  result = 0
+  (0..number).each do |n|
+    if n % 2 == 0
+      result += n
+    end
+  end
+  result
+end
+
+puts sum_of_evens(ARGV[0].to_i)
+#+END_SRC
+
+You can immediately see that it does more than one thing (it iterates
+between 0 and the number passed into ~ARGV~). In this case, the Big O
+notation would be $O(n)$, because it does $n$ things. O(n) is also
+called *linear time*.
+
+Let's run a few comparative tests between ~is_even?~ and
+~sum_of_evens~.
+
+#+BEGIN_SRC
+$ time ruby is_even.rb 1
+false
+ruby is_even.rb 1 0.06s user 0.01s system 92% cpu 0.075 total
+
+$ time ruby is_even.rb 100
+true
+ruby is_even.rb 100 0.06s user 0.01s system 96% cpu 0.077 total
+
+$ time ruby is_even.rb 1000000
+true
+ruby is_even.rb 1000000 0.06s user 0.01s system 96% cpu 0.081 total
+
+$ time ruby sum_of_evens.rb 1
+0
+ruby sum_of_evens.rb 1 0.06s user 0.01s system 88% cpu 0.076 total
+
+$ time ruby sum_of_evens.rb 100
+2550
+ruby sum_of_evens.rb 100 0.06s user 0.01s system 97% cpu 0.084 total
+
+$ time ruby sum_of_evens.rb 1000000
+250000500000
+ruby sum_of_evens.rb 1000000 0.13s user 0.01s system 92% cpu 0.153 total
+#+END_SRC
+
+Whoa, what the heck happened? When we passed 1,000,000 to
+~sum_of_evens~ it almost doubled in runtime, whereas it remained
+relatively *constant* with ~is_even?~. This underscores the most
+important and useful feature of Big O; *Big O describes how the
+runtime of an algorithm grows as its input gets bigger.* (Again, it
+can also describe how space grows, but don't worry about this now.)
+
+Have you ever written a feature that totally busted once your website
+had 100,000 users versus 100? You probably didn't take into
+consideration how a particular piece of code (most likely a database
+query) would grow as you got more users.
+
+
+In Chapter 2 we'll be diving into all the different categories of
+runtimes for Big O, from $O(1)$ to $O(n!)$.
+
+** Key takeaways
+
+- Big O generically describes the time it takes an algorithm to run,
+  without factoring in individual CPU speed
+- Big O describes how the runtime of an algorithm grows as its input
+  gets bigger
+- $O(1)$, or constant time, is code that doesn't take longer to run on
+  larger inputs
+- $O(n)$, or linear time, is code in which runtime grows linearly with
+  larger inputs
+
+** Exercises
+
+*** Problem 1
+
+*Q:* Is the following code $O(1)$ or $O(n)$?
+
+#+BEGIN_SRC ruby
+def subtract(a, b)
+  a - b
+end
+#+END_SRC
+
+*A:* $O(1)$, or constant time
+
+*** Problem 2
+
+*Q:* Is the following code $O(1)$ or $O(n)$?
+
+#+BEGIN_SRC ruby
+def compare(a, b)
+  diff = a - b
+
+  if diff < 0
+    :lt
+  elsif diff == 0
+    :eq
+  else
+    :gt
+  end
+end
+#+END_SRC
+
+*A:* $O(1)$, or constant time
+
+*** Problem 3
+
+*Q:* Is the following code $O(1)$ or $O(n)$?
+
+#+BEGIN_SRC ruby
+def average(list)
+  total = 0
+
+  list.each do |n|
+    total += n
+  end
+
+  total / list.length
+end
+#+END_SRC
+
+*A:* $O(n)$, or linear time
