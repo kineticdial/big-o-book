@@ -1,0 +1,179 @@
+* Big O in a nutshell
+
+In this chapter:
+- You'll have a working definition of what Big O is.
+- You'll understand why Big O is useful to programmers.
+
+Let me propose a problem to you: Let's say you had the following
+helper function and your boss wanted to know how fast it was.
+
+#+INCLUDE: "src/first_or_nil.rb" src ruby
+
+Easy! You write up a few benchmarks to demonstrate that this
+function, in fact, is quite fast. In your benchmarks you include
+several different list sizes because you know that performance can be
+heavily dependant on its input.
+
+#+INCLUDE: "src/first_or_nil_bm.rb" src ruby
+
+#+BEGIN_SRC
+       user     system      total        real
+empty  0.000000   0.000000   0.000000 (  0.000005)
+small  0.000000   0.000000   0.000000 (  0.000003)
+large  0.000000   0.000000   0.000000 (  0.000003)
+#+END_SRC
+
+You send in your findings to your boss, proving that ~fist_or_nil~ is
+super performant no matter how big ~list~ is. Your boss is very
+impressed, but has more work for you. They send you this next function
+to benchmark.
+
+#+include: "src/sum.rb" src ruby
+
+Again, you write up a benchmark using several list sizes as sample
+input. Because of your past experience you can intuit that this
+function may be a little less performant because it has a loop, but
+you're pretty sure its alright because there's no nested loops.
+
+#+include: "src/sum_bm.rb" src ruby
+
+#+begin_src
+       user     system      total        real
+empty  0.000000   0.000000   0.000000 (  0.000005)
+small  0.000000   0.000000   0.000000 (  0.000004)
+large  0.040000   0.000000   0.040000 (  0.040358)
+#+end_src
+
+You write up your findings for your boss. "While there's a noticeable
+increase in time on the benchmarks for when ~list~ is extremely large,
+this function is still very performant," you conclude.
+
+It's now 4 o'clock in the afternoon, but your boss has one more
+function for you to test before you leave for the day. It's a function
+that finds duplicate user IDs in a list.
+
+#+include: "src/contains_duplicates.rb" src ruby
+
+Again, you write a suite of benchmarks. This time you have a
+strange suspicion that this might not perform well because you noticed
+the nested for-loops in the body of the function.
+
+#+include: "src/contains_duplicates_bm.rb" src ruby
+
+#+begin_src
+       user     system      total        real
+empty  0.000000   0.000000   0.000000 (  0.000008)
+small  0.000000   0.000000   0.000000 (  0.000015)
+large
+#+end_src
+
+Huh, is it frozen? You press ~Ctrl-C~ to end the process and then
+lower ~large_list~ from ~1_000_000~ to ~100_000~.
+
+#+begin_src
+       user     system      total        real
+empty  0.000000   0.000000   0.000000 (  0.000005)
+small  0.000000   0.000000   0.000000 (  0.000014)
+large
+#+end_src
+
+Same thing. Also the fans on your computer have started to spin
+up. You try lowering ~large_list~ again, this time to ~10_000~.
+
+#+begin_src
+       user     system      total        real
+empty  0.000000   0.000000   0.000000 (  0.000005)
+small  0.000000   0.000000   0.000000 (  0.000013)
+large  6.620000   0.000000   6.620000 (  6.623028)
+#+end_src
+
+Finally! A result! You notice a few things right away:
+
+- It took about twice as long to compute 10 elements compared to 0.
+- It took about /500,000 times longer/ to compute 10,000 elements
+  compared to 10.
+- When ~list~ was 100,000 elements or larger the process effectively
+  froze.
+
+You send in your findings to your boss, saying that
+~contains_duplicates~ is fine for the time being, as your system only
+has about 200 users, but advise optimizing the algorithm immediately
+because it will not scale well.
+
+As you leave the office for the day you're still thinking about the
+~contains_duplicates~ function and how badly it performs based on the
+length of its input. You muse about how you wish there was a way to
+classify functions that might behave this badly.
+
+Turns out there is! It's called Big O Notation. *Big O notation*
+*represents how much time a function will take to execute /relative/*
+*to its input size.*
+
+We've already looked at three different categories of Big O
+classifications in this chapter:
+
+- ~first_or_nil~ was $O(1)$, or *constant time*. As its inputs grew
+  time remained /constant/.
+- ~sum~ was $O(n)$, or *linear time*. As its inputs grew time
+  increased /linearly/.
+- ~contains_duplicates~ was $O(n^2)$, or *polynomial time*[fn:1]. As
+  its inputs grew time increased /polynomially/.
+
+If you were to graph these functions it would look something like
+this:
+
+#+attr_html: :width 500px
+[[https://justin.abrah.ms/static/images/runtime_comparison.png]]
+
+Don't worry about committing all of this to memory yet, I'm just
+trying to get you thinking about how inputs might effect the
+performance of a function for right now. We'll dive into each category
+of Big O performance later.
+
+An important thing to keep in mind is that the *Big O always represents*
+*the "worst-case scenario."* For example:
+
+#+include: "src/find.rb" src ruby
+
+This function could exit in only one computation if the inputs were
+~list: [1, 2, 3, ..., 1_000_000], number: 1~, however we'd still
+consider this $O(n)$, or linear time, because that's not the
+worst-case scenario.
+
+** Key takeaways
+
+- Big O notation represents how much time a function will take to
+  execute /relative/ to its input size.
+- Big O always represents the "worst-case scenario."
+
+** Exercises
+
+*** Problem 1
+
+*Q:* In the above ~has_number?~ function, what inputs would be the
+worst-case scenario?
+
+*A:* If ~number~ does not appear in ~list~, the function will have to
+search through the /entire/ list before exiting.
+
+*** Problem 2
+
+*Q:* The programmer in the story seemed to be clued-in to when a
+function might perform badly. What was that clue?
+
+*A:* Nested for-loops.
+
+*** Problem 3
+
+*Q:* True/False: A function can have different Big O representations
+depending on its input.
+
+*A:* False. Big O always represents the worst-case scenario.
+
+
+[fn:1] Unfortunately, "polynomial" is one of those ugly math terms
+we're going to have to get used to using. An easy way to think about
+it would be "a function with $n$ raised to the power of some number."
+However, a more complete definition would be "an expression of more
+than two algebraic terms, especially the sum of several terms that
+contain different powers of the same variable(s)."

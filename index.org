@@ -3,5 +3,5 @@
 #+EMAIL: patrick.arthur.brown@gmail.com
 #+HTML_HEAD: <style>body{max-width: 600px;margin: 0 auto;}</style>
 
-#+INCLUDE: "chapter01.org"
-#+INCLUDE: "chapter02.org"
+#+INCLUDE: "introduction.org"
+#+INCLUDE: "big_o_in_a_nutshell.org"

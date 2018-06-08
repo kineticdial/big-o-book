@@ -1,0 +1,76 @@
+* Introduction
+
+*Your co-workers:* A bunch of Computer Science grads who graduated
+from various impressive universities. Software Engineering is
+something they only learned in theory at first but have applied those
+abstract concepts to real-world applications with good effect.
+
+*You:* A smart person who, through sheer force of will, have
+established yourself as a Pretty Okay® self-taught developer. To you,
+Software Development is less of a field of a study and more of a
+trade. Nails? That’s your programming language. Hammer? That’s
+git. When things don’t work you have no qualms with rolling up your
+sleeves and diving deep into the inner workings of codebases. You
+might not know exactly why things are the way they are, but you have
+great intuition.
+
+If this sounds familiar, give yourself a pat on the back. You took the
+hard route. Don’t diminish your accomplishments only because the
+School of Life doesn’t give out framed pieces of paper. This paper is
+for people like you. It’s goal is to be an easy-to-digest guide to Big
+O Notation for self-taught developers. Explicitly:
+
+- I'll be using mathematical terminology only when absolutely
+  necessary. I'm not here to impress you, I'm here to teach you.
+- When I do use mathematical terminology, I'll do my best to explain
+  it.
+- Always use a concrete example when explaining a concept with
+  runnable code. Sometimes its easier to learn by doing.
+- Give examples of how certain concepts are useful in your day-to-day
+  job.
+
+** Prerequisite skills
+
+The target audience for this book is for programmers already in the
+industry who do not have Computer Science backgrounds. Therefore, I'm
+expecting most people will know how to code, and can code very well.
+
+While it is possible that someone just learning to code could get a
+lot out of this book (all the code samples will be very simple),
+you'll get the most out of this book if you can code.
+
+** Tools used in this book
+
+For all examples I'll using version 2.5.1 of the [[https://www.ruby-lang.org/en/][Ruby programming
+language]]. Other versions of Ruby 2.X.X should be fine, but these
+examples are only guaranteed to run on 2.5.1.
+
+I'm using Ruby for a couple of reasons.
+
+- It is the language I am the most familiar with and have been using
+  professionally for over 5 years.
+- It is pretty easy to read for people who aren't familiar with it.
+- It is superficially similar to Python and PHP, languages I
+  anticipate other pragmatists being familiar with.
+- Lastly, the code I'll be writing should be generic enough to easily
+  transliterate to any another language.
+
+The only library I'll be using with Ruby is it's wonderful built-in
+~benchmark~. You can read more about the ~benchmark~ library in its
+[[https://ruby-doc.org/stdlib-2.5.1/libdoc/benchmark/rdoc/Benchmark.html][official documentation page]].
+
+** Chapter format
+
+To make it a little easier to understand, I'll be using a consistent
+format for each chapter. It'll look something like this:
+
+- Chapter title :: Self explanatory.
+- "In this chapter" :: A summary of what the reader can expect to
+     learn.
+- Chapter body :: The actual explanation of the concepts listed above,
+                  using code examples. Sometimes this will have
+                  subsections, but most times it will not.
+- "Key takeaways" :: Reiterate what the reader learned with concise
+     definitions for those concepts.
+- "Exercises" :: Problems to test the reader's knowledge of the
+                 chapter's contents.
